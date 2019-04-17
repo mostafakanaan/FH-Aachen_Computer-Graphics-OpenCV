@@ -1,24 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>741</width>
+    <height>670</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="hlMain">
+      <item>
+       <widget class="QGroupBox" name="vbControls">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>20</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 14pt &quot;.SF NS Text&quot;;
+</string>
+        </property>
+        <property name="title">
+         <string>Controls</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetFixedSize</enum>
+         </property>
+         <property name="bottomMargin">
+          <number>20</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="Sliders">
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="Slider1">
+             <item>
+              <widget class="QLabel" name="labelFOV">
+               <property name="text">
+                <string>Field of View</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spFOV">
+               <property name="minimum">
+                <number>45</number>
+               </property>
+               <property name="maximum">
+                <number>180</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="hlFOVSlider">
+               <item>
+                <widget class="QSlider" name="vsFOV">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>OpenHandCursor</cursorShape>
+                 </property>
+                 <property name="minimum">
+                  <number>45</number>
+                 </property>
+                 <property name="maximum">
+                  <number>180</number>
+                 </property>
+                 <property name="sliderPosition">
+                  <number>45</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="invertedAppearance">
+                  <bool>false</bool>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::NoTicks</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="Slider2">
+             <property name="leftMargin">
+              <number>18</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="labelAngle">
+               <property name="text">
+                <string>Angle           </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spAngle">
+               <property name="maximum">
+                <number>360</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="hlAngleSlider">
+               <item>
+                <widget class="QSlider" name="vsAngle">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>OpenHandCursor</cursorShape>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="maximum">
+                  <number>360</number>
+                 </property>
+                 <property name="sliderPosition">
+                  <number>150</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::NoTicks</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gbProjection">
+           <property name="styleSheet">
+            <string notr="true">font: 14pt &quot;.SF NS Text&quot;;</string>
+           </property>
+           <property name="title">
+            <string>Projection Mode</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="rbPerspective">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Perspective</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rbOrthogonal">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Orthogonal</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gbRotation">
+           <property name="title">
+            <string>Rotations</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
+            <item>
+             <layout class="QFormLayout" name="Rotations">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelA">
+                <property name="text">
+                 <string>Ring A</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSlider" name="hsRotationA">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="maximum">
+                 <number>99</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labelB">
+                <property name="text">
+                 <string>Ring B</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSlider" name="hsRotationB">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labelC">
+                <property name="text">
+                 <string>Ring C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSlider" name="hsRotationC">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="gbClipping">
+           <property name="title">
+            <string>Clipping Plane</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="topMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QFormLayout" name="Clipping">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="dsbFar"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="dsbNear"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelNear">
+                <property name="text">
+                 <string>Near</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labelFar">
+                <property name="text">
+                 <string>Far</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="flControlButtons">
+           <item row="0" column="0" colspan="2">
+            <widget class="QPushButton" name="rbReset">
+             <property name="styleSheet">
+              <string notr="true">font: 13pt &quot;.SF NS Text&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Reset</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="MyGLWidget" name="openGLWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>80</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>480</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>myglwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
