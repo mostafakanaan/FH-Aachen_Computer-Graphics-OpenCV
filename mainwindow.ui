@@ -302,7 +302,11 @@
                <number>0</number>
               </property>
               <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="dsbFar"/>
+               <widget class="QDoubleSpinBox" name="dsbFar">
+                <property name="minimum">
+                 <double>2.000000000000000</double>
+                </property>
+               </widget>
               </item>
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="dsbNear"/>

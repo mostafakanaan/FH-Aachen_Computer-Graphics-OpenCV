@@ -12,10 +12,10 @@ public:
                                                         m_CameraPos.setX(0.0);
                                                         m_CameraPos.setY(0.0);
                                                         m_CameraPos.setZ(0.0);}
-    void fixNearFar();
-    void resetAttr();
+    void fixNearFar(int nearfar);
     void keyPressEvent(QKeyEvent *event);
     QVector3D m_CameraPos;
+    void printAttr();
 
 private:
     Q_OBJECT
@@ -48,7 +48,7 @@ signals:
     void rotationAvalueChanged(double newRotationAvalue);
     void rotationBvalueChanged(double newRotationBvalue);
     void rotationCvalueChanged(double newRotationCvalue);
-    void nearFar();
+    void nearFar(int nearfar); //0=near/1=far
 };
 
 #endif // MYGLWIDGET_H

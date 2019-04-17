@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Near/Far
     connect(ui->dsbNear, QOverload<double>::of(&QDoubleSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setNear);
     connect(ui->dsbFar, QOverload<double>::of(&QDoubleSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setFar);
-    connect(ui->openGLWidget, &MyGLWidget::nearFar, ui->openGLWidget, &MyGLWidget::fixNearFar);
+    connect(ui->openGLWidget, &MyGLWidget::nearFar, [=](int nearfar) {ui->openGLWidget->fixNearFar(nearfar);});
     connect(ui->openGLWidget, &MyGLWidget::nearValueChanged, ui->dsbNear, &QDoubleSpinBox::setValue);
     connect(ui->openGLWidget, &MyGLWidget::farValueChanged, ui->dsbFar, &QDoubleSpinBox::setValue);
 
@@ -62,11 +62,5 @@ void MainWindow::reset() {
     this->ui->hsRotationC->setValue(0);
     this->ui->vsFOV->setValue(45);
     this->ui->vsAngle->setValue(0);
-    this->ui->rbPerspective->setAutoExclusive(false);
-    this->ui->rbPerspective->setChecked(false);
-    this->ui->rbPerspective->setAutoExclusive(true);
-    this->ui->rbOrthogonal->setAutoExclusive(false);
-    this->ui->rbOrthogonal->setChecked(false);
-    this->ui->rbOrthogonal->setAutoExclusive(true);
-    this->ui->openGLWidget->resetAttr();
+    this->ui->rbPerspective->click();
 }

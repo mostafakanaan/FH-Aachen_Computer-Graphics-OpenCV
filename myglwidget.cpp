@@ -1,21 +1,26 @@
 #include "myglwidget.h"
 #include <iostream>
 
-void MyGLWidget::fixNearFar() {
-    if(m_Far>m_Near)
+void MyGLWidget::fixNearFar(int nearfar) {
+    if(nearfar == 0)  // near gesetzt..
        setFar(m_Near+2);
-    else
-       setNear(m_Far+2);
+
+    if(nearfar == 1) // far gesetzt..
+        setNear(m_Far-2);
+
 }
-void MyGLWidget::resetAttr() {
-    m_FOV=0;
-    m_Angle=0;
-    m_ProjectionMode = 0;
-    m_Near=0.0;
-    m_Far=0.0;
-    m_RotationA=0;
-    m_RotationB=0;
-    m_RotationC=0;
+
+void MyGLWidget::printAttr() {
+    using namespace std;
+    cout << "FOV= " << m_FOV << endl
+         << "Angle= " << m_Angle << endl
+         << "Projection Mode= ";
+         m_ProjectionMode==1? cout << "Perspective\n" : cout << "Orthogonal\n";
+    cout << "Near= " << m_Near << endl
+         << "Far= " << m_Far << endl
+         << "RotationA= " << m_RotationA << endl
+         << "RotationB= " << m_RotationB << endl
+         << "RotationC= " << m_RotationA << endl;
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent *event) {
@@ -43,6 +48,9 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
                      << m_CameraPos.y() << ", "
                         << m_CameraPos.z() << std::endl;
     }
+    else if (event->key() == Qt::Key_C) {
+        printAttr();
+    }
     else {
         QOpenGLWidget::keyPressEvent(event);
     }
@@ -66,19 +74,21 @@ void MyGLWidget::setProjectionMode(int perOrth) {
 }
 void MyGLWidget::setNear(double value) {
     this->m_Near = value;
-    if(value-m_Far > -2.0 && value-m_Far < 2.0) {
-        emit nearFar();
-    } else {
+
+    if(value > m_Far-2)
+        emit nearFar(0);
+
     emit nearValueChanged(value);
-    }
 }
+
 void MyGLWidget::setFar(double value) {
     this->m_Far = value;
-    if(value-m_Near > -2.0 && value-m_Near < 2.0) {
-        emit nearFar();
-    } else {
+
+    if(value < m_Near+2)
+        emit nearFar(1);
+
     emit farValueChanged(value);
-    }
+
 }
 void MyGLWidget::setRotationA(int value) {
     this->m_RotationA = value;
