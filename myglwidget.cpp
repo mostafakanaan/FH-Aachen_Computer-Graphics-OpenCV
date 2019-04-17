@@ -56,10 +56,13 @@ void MyGLWidget::setAngle(int value) {
     this->m_Angle = value;
     emit angleValueChanged(value);
 }
-void MyGLWidget::setProjectionMode() {
-    this->m_ProjectionMode = 1; //Perspective
-    //or
-    this->m_ProjectionMode = 2; //Orthogonal
+void MyGLWidget::setProjectionMode(int perOrth) {
+    if(perOrth == 1)
+        this->m_ProjectionMode = 1; //Perspective
+    if(perOrth == 2)
+        this->m_ProjectionMode = 2; //Orthogonal
+    emit projectionModeChanged(perOrth);
+    std::cout << m_ProjectionMode << std::endl;
 }
 void MyGLWidget::setNear(double value) {
     this->m_Near = value;

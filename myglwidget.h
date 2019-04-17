@@ -31,7 +31,7 @@ private:
 public slots:
     void setFOV(int value);
     void setAngle(int value);
-    void setProjectionMode();
+    void setProjectionMode(int perOrth); //1=per/2=orth
     void setNear(double value);
     void setFar(double value);
     void setRotationA(int value);
@@ -42,7 +42,7 @@ public slots:
 signals:
     void fovValueChanged(int newFOVvalue);
     void angleValueChanged(int newAngleValue);
-    void projectionModeChanged();
+    void projectionModeChanged(int perOrth); //1=per/2=orth
     void nearValueChanged(double newNearValue);
     void farValueChanged(double newFarValue);
     void rotationAvalueChanged(double newRotationAvalue);

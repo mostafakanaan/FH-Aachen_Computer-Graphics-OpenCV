@@ -43,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Reset
     connect(ui->rbReset, &QPushButton::clicked, this, &::MainWindow::reset);
+
+    //Projection Mode
+    connect(ui->rbPerspective, &QRadioButton::clicked, [=] () {ui->openGLWidget->setProjectionMode(1);});
+    connect(ui->rbOrthogonal, &QRadioButton::clicked, [=] () {ui->openGLWidget->setProjectionMode(2);});
    }
 
 MainWindow::~MainWindow()
