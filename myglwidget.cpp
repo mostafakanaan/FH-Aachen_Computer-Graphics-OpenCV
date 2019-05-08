@@ -1,5 +1,6 @@
 #include "myglwidget.h"
 #include <iostream>
+#include <vector>
 
 void MyGLWidget::fixNearFar(int nearfar) {
     if(nearfar == 0)  // near gesetzt..
@@ -22,6 +23,92 @@ void MyGLWidget::printAttr() {
          << "RotationB= " << m_RotationB << endl
          << "RotationC= " << m_RotationA << endl;
 }
+
+void MyGLWidget::initializeGL() {
+    bool success = initializeOpenGLFunctions();
+    Q_ASSERT(success); Q_UNUSED(success);
+    glClearColor(0.169f, 0.169f, 0.169f, 0.5f); //Dunkelgrau
+
+    // INITIALISIERUNG
+    // Enable and specify vertex attribute 0 (2 floats )
+    // void* cast is necessary for legacy reasons
+
+    // sizeof (Vertex) already evaluates to correct stride
+    struct Vertex {
+    GLfloat position[2];
+    GLfloat color[3];
+    };
+
+    Vertex arr[] = {
+        {{-0.5, -0.5},{1.0f, 0.0f, 0.0}},
+        {{0.5, -0.5},{0.0f, 1.0f, 0.0}},
+        {{0.0, 0.5},{0.0f, 0.0f, 1.0}}
+    };
+
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+
+    // create buffer object
+    glGenBuffers(1, &m_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+
+    // copy data
+    glBufferData(GL_ARRAY_BUFFER, sizeof(arr), arr , GL_STATIC_DRAW);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // define helper for offsetof that does the void* cast
+    #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
+
+    mp_program = new QOpenGLShaderProgram();
+
+    // addShader() compiles and attaches shader stages for linking
+    mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/default.vert");
+    mp_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/default.frag");
+    // link attached stages
+    mp_program->link();
+    // abort program if any of these steps failed
+    Q_ASSERT(mp_program->isLinked());
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
+
+    #undef OFS
+
+    QImage texImg;
+    texImg.load(":/sample_texture.jpg");
+    Q_ASSERT(!texImg.isNull());
+
+    // Create texture object glGenTextures(1, &m_tex); glBindTexture(GL_TEXTURE_2D, m_tex);
+    // fill with pixel data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texImg.width(), texImg.height(),
+    0, GL_BGRA, GL_UNSIGNED_BYTE, texImg.bits());
+    // set filtering ( interpolation ) options
+    // without these commands, _sampling will return black_
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+}
+
+void MyGLWidget::resizeGL(int w, int h) {
+
+}
+
+void MyGLWidget::paintGL() {
+    // erase old pixels
+    glClear(GL_COLOR_BUFFER_BIT);
+    // bind Resources
+    glBindVertexArray(m_vao);
+    mp_program->bind();
+    mp_program->setUniformValue(0, m_alpha);
+    // starting at vertex 0, render 3 vertices (=> 1 triangle)
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    update();
+}
+
 
 void MyGLWidget::keyPressEvent(QKeyEvent *event) {
 
@@ -101,4 +188,8 @@ void MyGLWidget::setRotationB(int value) {
 void MyGLWidget::setRotationC(int value) {
     this->m_RotationC = value;
     emit rotationCvalueChanged(value);
+}
+
+void MyGLWidget::setAlpha(int value) {
+    this->m_alpha = (float) (m_Angle) / 360.0;
 }

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>default.frag</file>
+        <file>default.vert</file>
+        <file>sample_texture.jpg</file>
+    </qresource>
+</RCC>

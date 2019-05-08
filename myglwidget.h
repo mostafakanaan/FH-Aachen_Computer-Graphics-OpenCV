@@ -4,8 +4,10 @@
 #include <QOpenGLWidget>
 #include <QKeyEvent>
 #include <QVector3D>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLShader>
 
-class MyGLWidget : public QOpenGLWidget
+class MyGLWidget : public QOpenGLWidget, private QOpenGLFunctions_3_3_Core
 {
 public:
     MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) { setFocusPolicy(Qt::StrongFocus);
@@ -17,6 +19,7 @@ public:
     QVector3D m_CameraPos;
     void printAttr();
 
+
 private:
     Q_OBJECT
     int m_FOV=0;
@@ -27,6 +30,8 @@ private:
     int m_RotationA=0;
     int m_RotationB=0;
     int m_RotationC=0;
+    float m_alpha=0.5;
+    GLuint m_tex;
 
 public slots:
     void setFOV(int value);
@@ -37,6 +42,7 @@ public slots:
     void setRotationA(int value);
     void setRotationB(int value);
     void setRotationC(int value);
+    void setAlpha(int value);
 
 
 signals:
@@ -49,6 +55,17 @@ signals:
     void rotationBvalueChanged(double newRotationBvalue);
     void rotationCvalueChanged(double newRotationCvalue);
     void nearFar(int nearfar); //0=near/1=far
+
+    // QOpenGLWidget interface
+protected:
+    void initializeGL();
+    void resizeGL(int w, int h);
+    void paintGL();
+
+private:
+    QOpenGLShaderProgram* mp_program;
+    GLuint m_vbo;
+    GLuint m_vao;
 };
 
 #endif // MYGLWIDGET_H

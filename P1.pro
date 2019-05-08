@@ -34,3 +34,9 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += \
+    shader.qrc
+
+DISTFILES += \
+    sample_texture.jpg

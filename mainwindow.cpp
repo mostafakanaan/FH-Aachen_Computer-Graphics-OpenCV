@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //Angle Slider
     connect(ui->vsAngle, &QSlider::valueChanged, ui->spAngle, QOverload<int>::of(&QSpinBox::setValue));
     connect(ui->vsAngle, &QSlider::valueChanged, ui->openGLWidget, &MyGLWidget::setAngle);
+    connect(ui->vsAngle, &QSlider::valueChanged, ui->openGLWidget, &MyGLWidget::setAlpha);
+
     //Angle Spinbox
     connect(ui->spAngle, QOverload<int>::of(&QSpinBox::valueChanged), ui->vsAngle, &QSlider::setValue);
     connect(ui->spAngle, QOverload<int>::of(&QSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setAngle);
