@@ -33,6 +33,7 @@ private:
     float m_alpha=0.5;
     GLuint m_tex;
 
+
 public slots:
     void setFOV(int value);
     void setAngle(int value);

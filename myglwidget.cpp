@@ -37,12 +37,13 @@ void MyGLWidget::initializeGL() {
     struct Vertex {
     GLfloat position[2];
     GLfloat color[3];
+    GLfloat texturePos[2];
     };
 
     Vertex arr[] = {
-        {{-0.5, -0.5},{1.0f, 0.0f, 0.0}},
-        {{0.5, -0.5},{0.0f, 1.0f, 0.0}},
-        {{0.0, 0.5},{0.0f, 0.0f, 1.0}}
+        {{-0.5, -0.5},{1.0f, 0.0f, 0.0},{0.2,0.2}},
+        {{0.5, -0.5},{0.0f, 1.0f, 0.0},{0.8,0.2}},
+        {{0.0, 0.5},{0.0f, 0.0f, 1.0},{0.5,0.8}}
     };
 
     glGenVertexArrays(1, &m_vao);
@@ -61,6 +62,15 @@ void MyGLWidget::initializeGL() {
     // define helper for offsetof that does the void* cast
     #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texturePos));
+
+    #undef OFS
+
     mp_program = new QOpenGLShaderProgram();
 
     // addShader() compiles and attaches shader stages for linking
@@ -71,16 +81,16 @@ void MyGLWidget::initializeGL() {
     // abort program if any of these steps failed
     Q_ASSERT(mp_program->isLinked());
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
 
-    #undef OFS
 
     QImage texImg;
     texImg.load(":/sample_texture.jpg");
     Q_ASSERT(!texImg.isNull());
+
+
+    // Create texture object
+    glGenTextures(1, &m_tex);
+    glBindTexture(GL_TEXTURE_2D, m_tex);
 
     // Create texture object glGenTextures(1, &m_tex); glBindTexture(GL_TEXTURE_2D, m_tex);
     // fill with pixel data
@@ -103,7 +113,16 @@ void MyGLWidget::paintGL() {
     // bind Resources
     glBindVertexArray(m_vao);
     mp_program->bind();
+
+
     mp_program->setUniformValue(0, m_alpha);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_tex);
+
+    // write unit indices to uniforms
+    mp_program->setUniformValue(7, 0);
+
     // starting at vertex 0, render 3 vertices (=> 1 triangle)
     glDrawArrays(GL_TRIANGLES, 0, 3);
     update();
