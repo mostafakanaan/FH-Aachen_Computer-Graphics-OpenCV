@@ -4,7 +4,7 @@
 
 void MyGLWidget::fixNearFar(int nearfar) {
     if(nearfar == 0)  // near gesetzt..
-       setFar(m_Near+2);
+        setFar(m_Near+2);
 
     if(nearfar == 1) // far gesetzt..
         setNear(m_Far-2);
@@ -16,7 +16,7 @@ void MyGLWidget::printAttr() {
     cout << "FOV= " << m_FOV << endl
          << "Angle= " << m_Angle << endl
          << "Projection Mode= ";
-         m_ProjectionMode==1? cout << "Perspective\n" : cout << "Orthogonal\n";
+    m_ProjectionMode==1? cout << "Perspective\n" : cout << "Orthogonal\n";
     cout << "Near= " << m_Near << endl
          << "Far= " << m_Far << endl
          << "RotationA= " << m_RotationA << endl
@@ -34,10 +34,11 @@ void MyGLWidget::initializeGL() {
     // void* cast is necessary for legacy reasons
 
     // sizeof (Vertex) already evaluates to correct stride
+
     struct Vertex {
-    GLfloat position[2];
-    GLfloat color[3];
-    GLfloat texturePos[2];
+        GLfloat position[2];
+        GLfloat color[3];
+        GLfloat texturePos[2];
     };
 
     Vertex arr[] = {
@@ -60,7 +61,7 @@ void MyGLWidget::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // define helper for offsetof that does the void* cast
-    #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
+#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
@@ -69,7 +70,7 @@ void MyGLWidget::initializeGL() {
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, texturePos));
 
-    #undef OFS
+#undef OFS
 
     mp_program = new QOpenGLShaderProgram();
 
@@ -82,7 +83,6 @@ void MyGLWidget::initializeGL() {
     Q_ASSERT(mp_program->isLinked());
 
 
-
     QImage texImg;
     texImg.load(":/sample_texture.jpg");
     Q_ASSERT(!texImg.isNull());
@@ -92,10 +92,9 @@ void MyGLWidget::initializeGL() {
     glGenTextures(1, &m_tex);
     glBindTexture(GL_TEXTURE_2D, m_tex);
 
-    // Create texture object glGenTextures(1, &m_tex); glBindTexture(GL_TEXTURE_2D, m_tex);
     // fill with pixel data
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texImg.width(), texImg.height(),
-    0, GL_BGRA, GL_UNSIGNED_BYTE, texImg.bits());
+                 0, GL_BGRA, GL_UNSIGNED_BYTE, texImg.bits());
     // set filtering ( interpolation ) options
     // without these commands, _sampling will return black_
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -151,8 +150,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
     }
     else if(event->key() == Qt::Key_P) {
         std::cout << m_CameraPos.x() << ", "
-                     << m_CameraPos.y() << ", "
-                        << m_CameraPos.z() << std::endl;
+                  << m_CameraPos.y() << ", "
+                  << m_CameraPos.z() << std::endl;
     }
     else if (event->key() == Qt::Key_C) {
         printAttr();
@@ -209,6 +208,7 @@ void MyGLWidget::setRotationC(int value) {
     emit rotationCvalueChanged(value);
 }
 
-void MyGLWidget::setAlpha(int value) {
+void MyGLWidget::setAlpha() {
     this->m_alpha = (float) (m_Angle) / 360.0;
 }
+

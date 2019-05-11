@@ -10,10 +10,10 @@
 class MyGLWidget : public QOpenGLWidget, private QOpenGLFunctions_3_3_Core
 {
 public:
-    MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) { setFocusPolicy(Qt::StrongFocus);
-                                                        m_CameraPos.setX(0.0);
-                                                        m_CameraPos.setY(0.0);
-                                                        m_CameraPos.setZ(0.0);}
+    MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
+        setFocusPolicy(Qt::StrongFocus);
+        m_CameraPos.setX(0.0); m_CameraPos.setY(0.0); m_CameraPos.setZ(0.0);
+    }
     void fixNearFar(int nearfar);
     void keyPressEvent(QKeyEvent *event);
     QVector3D m_CameraPos;
@@ -33,7 +33,6 @@ private:
     float m_alpha=0.5;
     GLuint m_tex;
 
-
 public slots:
     void setFOV(int value);
     void setAngle(int value);
@@ -43,7 +42,7 @@ public slots:
     void setRotationA(int value);
     void setRotationB(int value);
     void setRotationC(int value);
-    void setAlpha(int value);
+    void setAlpha();
 
 
 signals:
