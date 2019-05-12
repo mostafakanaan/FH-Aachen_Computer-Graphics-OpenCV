@@ -31,7 +31,11 @@ private:
     int m_RotationB=0;
     int m_RotationC=0;
     float m_alpha=0.5;
+    QOpenGLShaderProgram* mp_program;
+    GLuint m_vbo;
+    GLuint m_vao;
     GLuint m_tex;
+    GLfloat m_Udiff = 0.0;
 
 public slots:
     void setFOV(int value);
@@ -43,6 +47,7 @@ public slots:
     void setRotationB(int value);
     void setRotationC(int value);
     void setAlpha();
+    void setUco();
 
 
 signals:
@@ -62,10 +67,6 @@ protected:
     void resizeGL(int w, int h);
     void paintGL();
 
-private:
-    QOpenGLShaderProgram* mp_program;
-    GLuint m_vbo;
-    GLuint m_vao;
 };
 
 #endif // MYGLWIDGET_H

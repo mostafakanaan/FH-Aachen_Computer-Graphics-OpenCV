@@ -42,9 +42,9 @@ void MyGLWidget::initializeGL() {
     };
 
     Vertex arr[] = {
-        {{-0.5, -0.5},{1.0f, 0.0f, 0.0},{0.2,0.2}},
-        {{0.5, -0.5},{0.0f, 1.0f, 0.0},{0.8,0.2}},
-        {{0.0, 0.5},{0.0f, 0.0f, 1.0},{0.5,0.8}}
+        {{-0.5, -0.5},{1.0f, 0.0f, 0.0},{float(0.2)+m_Udiff,0.2}},
+        {{0.5, -0.5},{0.0f, 1.0f, 0.0},{float(0.8)+m_Udiff,0.2}},
+        {{0.0, 0.5},{0.0f, 0.0f, 1.0},{float(0.5)+m_Udiff,0.8}}
     };
 
     glGenVertexArrays(1, &m_vao);
@@ -61,7 +61,7 @@ void MyGLWidget::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // define helper for offsetof that does the void* cast
-#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
+    #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
@@ -116,8 +116,13 @@ void MyGLWidget::paintGL() {
 
     mp_program->setUniformValue(0, m_alpha);
 
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
+
+    // set wrap mode to "clamp to edge"
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // write unit indices to uniforms
     mp_program->setUniformValue(7, 0);
@@ -212,3 +217,7 @@ void MyGLWidget::setAlpha() {
     this->m_alpha = (float) (m_Angle) / 360.0;
 }
 
+void MyGLWidget::setUco() {
+    this->m_Udiff = (float) (m_RotationA/100.0);
+    initializeGL();
+}
