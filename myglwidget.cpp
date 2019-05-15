@@ -8,7 +8,6 @@ void MyGLWidget::fixNearFar(int nearfar) {
 
     if(nearfar == 1) // far gesetzt..
         setNear(m_Far-2);
-
 }
 
 void MyGLWidget::printAttr() {
@@ -29,11 +28,6 @@ void MyGLWidget::initializeGL() {
     Q_ASSERT(success); Q_UNUSED(success);
     glClearColor(0.169f, 0.169f, 0.169f, 0.5f); //Dunkelgrau
 
-    // INITIALISIERUNG
-    // Enable and specify vertex attribute 0 (2 floats )
-    // void* cast is necessary for legacy reasons
-
-    // sizeof (Vertex) already evaluates to correct stride
 
     struct Vertex {
         GLfloat position[2];
@@ -42,13 +36,23 @@ void MyGLWidget::initializeGL() {
     };
 
     Vertex arr[] = {
-        {{-0.5, -0.5},{1.0f, 0.0f, 0.0},{float(0.2)+m_Udiff,0.2}},
-        {{0.5, -0.5},{0.0f, 1.0f, 0.0},{float(0.8)+m_Udiff,0.2}},
-        {{0.0, 0.5},{0.0f, 0.0f, 1.0},{float(0.5)+m_Udiff,0.8}}
+        {{-0.6, -0.4},{1.0f, 0.0f, 0.0},{0.1,0.1}},         // 0
+        {{0.2, -0.4},{1.0f, 0.0f, 0.0},{0.6,0.1}},          // 1
+        {{-0.2, 0.4},{0.0f, 1.0f, 0.0},{0.4,0.8}},  // 2
+        {{0.6, 0.4},{0.0f, 0.0f, 1.0},{0.9,0.8}}    // 3
     };
 
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
+
+    GLuint indices[] = {
+        0, 1, 2,
+        1, 2, 3
+    };
+
+    glGenBuffers(1, &m_ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // create buffer object
     glGenBuffers(1, &m_vbo);
@@ -61,7 +65,7 @@ void MyGLWidget::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // define helper for offsetof that does the void* cast
-    #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
+#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
@@ -73,15 +77,15 @@ void MyGLWidget::initializeGL() {
 #undef OFS
 
     mp_program = new QOpenGLShaderProgram();
+    mp_program2 = new QOpenGLShaderProgram();
 
     // addShader() compiles and attaches shader stages for linking
-    mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/default.vert");
-    mp_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/default.frag");
-    // link attached stages
+    mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle.vert");
+    mp_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/triangle1.frag");
+    mp_program2->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle.vert");
+    mp_program2->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/triangle2.frag");
     mp_program->link();
-    // abort program if any of these steps failed
-    Q_ASSERT(mp_program->isLinked());
-
+    mp_program2->link();
 
     QImage texImg;
     texImg.load(":/sample_texture.jpg");
@@ -114,21 +118,31 @@ void MyGLWidget::paintGL() {
     mp_program->bind();
 
 
-    mp_program->setUniformValue(0, m_alpha);
-
+    mp_program->setUniformValue("uAlpha", m_alpha);
+    mp_program->setUniformValue("uOffset",m_Udiff);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
 
-    // set wrap mode to "clamp to edge"
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // set wrap mode to "clamp to edge"
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // write unit indices to uniforms
     mp_program->setUniformValue(7, 0);
 
     // starting at vertex 0, render 3 vertices (=> 1 triangle)
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // draw first triangle
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    // draw second triangle
+    mp_program2->bind();
+    mp_program2->setUniformValue(0, m_alpha);
+    void* const offset = reinterpret_cast<void* const>(sizeof(GLuint)*3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
+    mp_program2->release();
+
     update();
 }
 
@@ -219,5 +233,4 @@ void MyGLWidget::setAlpha() {
 
 void MyGLWidget::setUco() {
     this->m_Udiff = (float) (m_RotationA/100.0);
-    initializeGL();
 }

@@ -10,11 +10,13 @@ layout(location = 0) out vec4 fragColor;
 
 uniform float uAlpha;
 uniform sampler2D tex0;
+uniform float uOffset;
 
 void main(void)
 {
-    //fragColor = vec4(vColor,uAlpha);
-    vec4 color = texture(tex0, uv);
+    vec2 uvNeu = vec2(uv.x+uOffset,uv.y);
 
+    //fragColor = vec4(vColor,uAlpha);
+    vec4 color = texture(tex0, uvNeu);
     fragColor = color;
 }

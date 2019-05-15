@@ -32,7 +32,9 @@ private:
     int m_RotationC=0;
     float m_alpha=0.5;
     QOpenGLShaderProgram* mp_program;
+    QOpenGLShaderProgram* mp_program2;
     GLuint m_vbo;
+    GLuint m_ibo;
     GLuint m_vao;
     GLuint m_tex;
     GLfloat m_Udiff = 0.0;
