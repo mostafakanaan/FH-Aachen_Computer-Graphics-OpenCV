@@ -63,7 +63,7 @@ void MyGLWidget::initializeGL() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    //glEnable(GL_CULL_FACE);
     // define helper for offsetof that does the void* cast
 #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
@@ -80,9 +80,9 @@ void MyGLWidget::initializeGL() {
     mp_program2 = new QOpenGLShaderProgram();
 
     // addShader() compiles and attaches shader stages for linking
-    mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle.vert");
+    mp_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle1.vert");
     mp_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/triangle1.frag");
-    mp_program2->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle.vert");
+    mp_program2->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/triangle2.vert");
     mp_program2->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/triangle2.frag");
     mp_program->link();
     mp_program2->link();
@@ -113,20 +113,29 @@ void MyGLWidget::resizeGL(int w, int h) {
 void MyGLWidget::paintGL() {
     // erase old pixels
     glClear(GL_COLOR_BUFFER_BIT);
+
     // bind Resources
     glBindVertexArray(m_vao);
     mp_program->bind();
 
 
-    mp_program->setUniformValue("uAlpha", m_alpha);
-    mp_program->setUniformValue("uOffset",m_Udiff);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
 
-        // set wrap mode to "clamp to edge"
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // set wrap mode to "clamp to edge"
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // rotation axis (= Y-axis)
+    QVector3D rotAxis(0, 1, 0);
+    QMatrix4x4 rotMat1;
+    rotMat1.rotate(m_RotationA*4,rotAxis);
+    QMatrix4x4 rotMat2;
+    rotMat2.rotate(m_RotationB*4, rotAxis);
+
+    mp_program->setUniformValue("uAlpha", m_alpha);
+    mp_program->setUniformValue("uOffset",m_Udiff);
+    mp_program->setUniformValue("uRotMat",rotMat1);
 
     // write unit indices to uniforms
     mp_program->setUniformValue(7, 0);
@@ -134,11 +143,14 @@ void MyGLWidget::paintGL() {
     // starting at vertex 0, render 3 vertices (=> 1 triangle)
     //glDrawArrays(GL_TRIANGLES, 0, 3);
 
+
+
     // draw first triangle
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
     // draw second triangle
     mp_program2->bind();
-    mp_program2->setUniformValue(0, m_alpha);
+    mp_program2->setUniformValue("uRotMat", rotMat2);
+    mp_program2->setUniformValue("uAlpha", m_alpha);
     void* const offset = reinterpret_cast<void* const>(sizeof(GLuint)*3);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
     mp_program2->release();
@@ -232,5 +244,6 @@ void MyGLWidget::setAlpha() {
 }
 
 void MyGLWidget::setUco() {
-    this->m_Udiff = (float) (m_RotationA/100.0);
+    this->m_Udiff = (float) (m_RotationC/100.0);
 }
+

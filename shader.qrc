@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>triangle1.frag</file>
-        <file>triangle.vert</file>
+        <file>triangle1.vert</file>
         <file>sample_texture.jpg</file>
         <file>triangle2.frag</file>
+        <file>triangle2.vert</file>
     </qresource>
 </RCC>

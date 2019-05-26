@@ -253,10 +253,10 @@
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
                 <property name="minimum">
-                 <number>-100</number>
+                 <number>0</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>90</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -279,7 +279,7 @@
                  <number>0</number>
                 </property>
                 <property name="maximum">
-                 <number>99</number>
+                 <number>90</number>
                 </property>
                 <property name="singleStep">
                  <number>1</number>
@@ -300,6 +300,9 @@
                <widget class="QSlider" name="hsRotationC">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="maximum">
+                 <number>90</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
