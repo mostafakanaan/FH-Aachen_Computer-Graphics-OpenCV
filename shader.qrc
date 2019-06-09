@@ -5,5 +5,6 @@
         <file>sample_texture.jpg</file>
         <file>triangle2.frag</file>
         <file>triangle2.vert</file>
+        <file>gimbal.obj</file>
     </qresource>
 </RCC>

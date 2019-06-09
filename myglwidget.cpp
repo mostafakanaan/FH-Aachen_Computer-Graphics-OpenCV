@@ -1,6 +1,13 @@
 #include "myglwidget.h"
-#include <iostream>
-#include <vector>
+
+
+MyGLWidget::MyGLWidget(QWidget *parent): QOpenGLWidget(parent) {
+    setFocusPolicy(Qt::StrongFocus);
+}
+
+MyGLWidget::~MyGLWidget(){
+    finalizeGL();
+}
 
 void MyGLWidget::fixNearFar(int nearfar) {
     if(nearfar == 0)  // near gesetzt..
@@ -20,7 +27,7 @@ void MyGLWidget::printAttr() {
          << "Far= " << m_Far << endl
          << "RotationA= " << m_RotationA << endl
          << "RotationB= " << m_RotationB << endl
-         << "RotationC= " << m_RotationA << endl;
+         << "RotationC= " << m_RotationC << endl;
 }
 
 void MyGLWidget::initializeGL() {
@@ -28,6 +35,8 @@ void MyGLWidget::initializeGL() {
     Q_ASSERT(success); Q_UNUSED(success);
     glClearColor(0.169f, 0.169f, 0.169f, 0.5f); //Dunkelgrau
 
+    m_Aspect = this->width()/this->height();
+    projectionMat.perspective(m_Angle, m_Aspect, m_Near, m_Far);
 
     struct Vertex {
         GLfloat position[2];
@@ -47,7 +56,7 @@ void MyGLWidget::initializeGL() {
 
     GLuint indices[] = {
         0, 1, 2,
-        1, 2, 3
+        3, 2, 1
     };
 
     glGenBuffers(1, &m_ibo);
@@ -63,7 +72,7 @@ void MyGLWidget::initializeGL() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     // define helper for offsetof that does the void* cast
 #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
@@ -107,7 +116,9 @@ void MyGLWidget::initializeGL() {
 }
 
 void MyGLWidget::resizeGL(int w, int h) {
-
+    m_Aspect = (double)w/(double)h;
+    std::cout << "W= " << w << ", H= " << h << "\nRatio: " << m_Aspect << std::endl;
+    updateProjectionMatrix();
 }
 
 void MyGLWidget::paintGL() {
@@ -199,15 +210,25 @@ void MyGLWidget::setFOV(int value) {
 void MyGLWidget::setAngle(int value) {
     this->m_Angle = value;
     emit angleValueChanged(value);
+    updateProjectionMatrix();
 }
 void MyGLWidget::setProjectionMode(int perOrth) {
-    if(perOrth == 1)
-        this->m_ProjectionMode = 1; //Perspective
-    if(perOrth == 2)
-        this->m_ProjectionMode = 2; //Orthogonal
+    if(perOrth == 1){
+        this->m_ProjectionMode = 1;
+        std::cout << "Perspective" << std::endl;
+    }
+    if(perOrth == 2) {
+        this->m_ProjectionMode = 2;
+        std::cout << "Orthogonal" << std::endl;
+    }
     emit projectionModeChanged(perOrth);
-    std::cout << m_ProjectionMode << std::endl;
 }
+
+void MyGLWidget::updateProjectionMatrix() {
+    projectionMat = QMatrix4x4();
+    projectionMat.perspective(qDegreesToRadians((double)m_Angle), m_Aspect, (float) m_Near, (float) m_Far);
+}
+
 void MyGLWidget::setNear(double value) {
     this->m_Near = value;
 
@@ -215,6 +236,7 @@ void MyGLWidget::setNear(double value) {
         emit nearFar(0);
 
     emit nearValueChanged(value);
+    updateProjectionMatrix();
 }
 
 void MyGLWidget::setFar(double value) {
@@ -224,7 +246,7 @@ void MyGLWidget::setFar(double value) {
         emit nearFar(1);
 
     emit farValueChanged(value);
-
+    updateProjectionMatrix();
 }
 void MyGLWidget::setRotationA(int value) {
     this->m_RotationA = value;
@@ -247,3 +269,10 @@ void MyGLWidget::setUco() {
     this->m_Udiff = (float) (m_RotationC/100.0);
 }
 
+void MyGLWidget::finalizeGL() {
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_ibo);
+    glDeleteVertexArrays(1, &m_vao);
+    glDeleteTextures(1, &m_tex);
+    delete mp_program;
+}

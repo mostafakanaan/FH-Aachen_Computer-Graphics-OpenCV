@@ -1,30 +1,34 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
+#include <iostream>
+#include <vector>
+#include <QtMath>
 #include <QWidget>
 #include <QOpenGLWidget>
-#include <QKeyEvent>
 #include <QVector3D>
+#include <QKeyEvent>
 #include <QOpenGLFunctions_3_3_Core>
-#include <QOpenGLShader>
+#include <QOpenGLShaderProgram>
+#include "modelloader.h"
+#include "model.h"
 
 class MyGLWidget : public QOpenGLWidget, private QOpenGLFunctions_3_3_Core
 {
+    Q_OBJECT
+
 public:
-    MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
-        setFocusPolicy(Qt::StrongFocus);
-        m_CameraPos.setX(0.0); m_CameraPos.setY(0.0); m_CameraPos.setZ(0.0);
-    }
+    MyGLWidget(QWidget *parent);
+    ~MyGLWidget();
+    void printAttr();
     void fixNearFar(int nearfar);
     void keyPressEvent(QKeyEvent *event);
-    QVector3D m_CameraPos;
-    void printAttr();
 
 
 private:
-    Q_OBJECT
-    int m_FOV=0;
+    int m_FOV=45;
     int m_Angle=0;
     int m_ProjectionMode = 0;
+    double m_Aspect=0.0;
     double m_Near=0.0;
     double m_Far=0.0;
     int m_RotationA=0;
@@ -38,6 +42,8 @@ private:
     GLuint m_vao;
     GLuint m_tex;
     GLfloat m_Udiff = 0.0;
+    QVector3D m_CameraPos;
+    QMatrix4x4 projectionMat;
 
 public slots:
     void setFOV(int value);
@@ -50,6 +56,7 @@ public slots:
     void setRotationC(int value);
     void setAlpha();
     void setUco();
+    void updateProjectionMatrix();
 
 
 signals:
@@ -68,6 +75,7 @@ protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
+    void finalizeGL();
 
 };
 

@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
     //FOV Slider
     connect(ui->vsFOV, &QSlider::valueChanged, ui->spFOV, QOverload<int>::of(&QSpinBox::setValue));
     connect(ui->vsFOV, &QSlider::valueChanged, ui->openGLWidget, &MyGLWidget::setFOV);
@@ -23,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vsAngle, &QSlider::valueChanged, ui->spAngle, QOverload<int>::of(&QSpinBox::setValue));
     connect(ui->vsAngle, &QSlider::valueChanged, ui->openGLWidget, &MyGLWidget::setAngle);
     connect(ui->vsAngle, &QSlider::valueChanged, ui->openGLWidget, &MyGLWidget::setAlpha);
-
     //Angle Spinbox
     connect(ui->spAngle, QOverload<int>::of(&QSpinBox::valueChanged), ui->vsAngle, &QSlider::setValue);
     connect(ui->spAngle, QOverload<int>::of(&QSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setAngle);
@@ -40,16 +38,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //Near/Far
     connect(ui->dsbNear, QOverload<double>::of(&QDoubleSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setNear);
     connect(ui->dsbFar, QOverload<double>::of(&QDoubleSpinBox::valueChanged), ui->openGLWidget, &MyGLWidget::setFar);
-    connect(ui->openGLWidget, &MyGLWidget::nearFar, [=](int nearfar) {ui->openGLWidget->fixNearFar(nearfar);});
     connect(ui->openGLWidget, &MyGLWidget::nearValueChanged, ui->dsbNear, &QDoubleSpinBox::setValue);
     connect(ui->openGLWidget, &MyGLWidget::farValueChanged, ui->dsbFar, &QDoubleSpinBox::setValue);
-
-    //Reset
-    connect(ui->rbReset, &QPushButton::clicked, this, &::MainWindow::reset);
+    connect(ui->openGLWidget, &MyGLWidget::nearFar, [=](int nearfar) {ui->openGLWidget->fixNearFar(nearfar);});
 
     //Projection Mode
     connect(ui->rbPerspective, &QRadioButton::clicked, [=] () {ui->openGLWidget->setProjectionMode(1);});
     connect(ui->rbOrthogonal, &QRadioButton::clicked, [=] () {ui->openGLWidget->setProjectionMode(2);});
+
+    //Reset
+    connect(ui->rbReset, &QPushButton::clicked, this, &::MainWindow::reset);
    }
 
 MainWindow::~MainWindow()

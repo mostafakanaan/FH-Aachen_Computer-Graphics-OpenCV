@@ -23,14 +23,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
+
+unix {
+LIBS += /usr/local/Cellar/assimp/4.1.0/lib/libassimp.4.dylib
+INCLUDEPATH += /usr/local/Cellar/assimp/4.1.0/include
+}
+
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    myglwidget.cpp
+    myglwidget.cpp \
+    model.cpp
 
 HEADERS += \
         mainwindow.h \
-    myglwidget.h
+    myglwidget.h \
+    modelloader.h \
+    model.h
 
 FORMS += \
         mainwindow.ui
@@ -40,3 +49,4 @@ RESOURCES += \
 
 DISTFILES += \
     sample_texture.jpg
+
